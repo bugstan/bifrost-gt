@@ -42,7 +42,7 @@ jobs:
 
       - name: Extract Version
         id: get_version
-        run: echo "VERSION=$(cat transports/version)-gt" >> $GITHUB_ENV
+        run: echo "VERSION=$(cat transports/version)" >> $GITHUB_ENV
 
       - name: Build Bifrost HTTP (Linux AMD64)
         run: |
@@ -57,5 +57,5 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TAG_NAME="v${{ env.VERSION }}"
-          gh release create "$TAG_NAME" dist/* --title "Bifrost HTTP $TAG_NAME (GT Branch)" --notes "Custom Linux AMD64 build for GT Branch." || gh release upload "$TAG_NAME" dist/* --clobber
+          TAG_NAME="transports/v${{ env.VERSION }}"
+          gh release create "$TAG_NAME" dist/* --title "Bifrost HTTP v${{ env.VERSION }} (GT Branch)" --notes "Custom Linux AMD64 build for GT Branch." || gh release upload "$TAG_NAME" dist/* --clobber
