@@ -26,6 +26,20 @@ jobs:
         with:
           go-version: "1.26.1"
 
+      - name: Set up Go Workspaces
+        run: |
+          go work init
+          go work use ./core
+          go work use ./framework
+          go work use ./transports
+          go work use ./plugins/governance
+          go work use ./plugins/litellmcompat
+          go work use ./plugins/logging
+          go work use ./plugins/maxim
+          go work use ./plugins/otel
+          go work use ./plugins/semanticcache
+          go work use ./plugins/telemetry
+
       - name: Extract Version
         id: get_version
         run: echo "VERSION=$(cat transports/version)-gt" >> $GITHUB_ENV
@@ -34,7 +48,7 @@ jobs:
         run: |
           mkdir -p dist/
           cd transports/bifrost-http
-          env GOWORK=off CGO_ENABLED=1 GOOS=linux GOARCH=amd64 \
+          env CGO_ENABLED=1 GOOS=linux GOARCH=amd64 \
             go build -trimpath -tags "netgo,osusergo,sqlite_static" \
             -ldflags "-s -w -buildid= -extldflags '-static' -X main.Version=v${{ env.VERSION }}" \
             -o ../../dist/bifrost-http-linux-amd64-gt .
