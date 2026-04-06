@@ -50,12 +50,12 @@ jobs:
           cd transports/bifrost-http
           env CGO_ENABLED=1 GOOS=linux GOARCH=amd64 \
             go build -trimpath -tags "netgo,osusergo,sqlite_static" \
-            -ldflags "-s -w -buildid= -extldflags '-static' -X main.Version=v${{ env.VERSION }}" \
+            -ldflags "-s -w -buildid= -extldflags '-static' -X main.Version=v${{ env.VERSION }}-gt" \
             -o ../../dist/bifrost-http-linux-amd64-gt .
             
       - name: Create or Update Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TAG_NAME="transports/v${{ env.VERSION }}"
-          gh release create "$TAG_NAME" dist/* --title "Bifrost HTTP v${{ env.VERSION }} (GT Branch)" --notes "Custom Linux AMD64 build for GT Branch." || gh release upload "$TAG_NAME" dist/* --clobber
+          TAG_NAME="transports/v${{ env.VERSION }}-gt"
+          gh release create "$TAG_NAME" dist/* --title "Bifrost HTTP v${{ env.VERSION }}-gt (GT Branch)" --notes "Custom Linux AMD64 build for GT Branch." || gh release upload "$TAG_NAME" dist/* --clobber
